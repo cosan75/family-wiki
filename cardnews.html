@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우리집 수첩 사용법</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--bg:#e9e2d2;--paper:#fffdf8;--cream:#f4efe4;--ink:#22302a;--muted:#6c756f;--line:#e3dbc9;--soft:#efe8d8;
+  --green:#2f6b4f;--orange:#c8562c;--orange-soft:#fbe6dc;--blue:#3b7dd8;--kid2:#d9643a;--mom:#d0487a;--dad:#2f9e6e}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:Pretendard,"Malgun Gothic",sans-serif;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere;
+  padding:28px 16px 60px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.lead{text-align:center;font-size:13px;color:var(--muted);line-height:1.6}
+/* 카드: 모든 크기는 카드 폭 기준(cqw) → 480px 미리보기와 1080px 저장본이 같은 모양 */
+.card{container-type:inline-size;width:100%;aspect-ratio:1/1;border-radius:4.5cqw;overflow:hidden;position:relative;
+  background:var(--cream);box-shadow:0 10px 30px -14px rgba(34,48,42,.45)}
+.in{position:absolute;inset:0;padding:7.5cqw 7cqw 7cqw;display:flex;flex-direction:column}
+.num{position:absolute;top:6.5cqw;right:7cqw;font-size:2.9cqw;font-weight:800;color:var(--muted);letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.tag{font-size:3cqw;font-weight:800;color:var(--green);letter-spacing:.02em;display:flex;align-items:center;gap:1.6cqw}
+.tag i{width:2.2cqw;height:2.2cqw;border-radius:50%;background:var(--green)}
+h2{font-size:7.4cqw;line-height:1.2;letter-spacing:-.04em;font-weight:850;margin-top:3cqw}
+h2 em{font-style:normal;color:var(--green)}
+h2 .o{color:var(--orange)}
+p.s{font-size:3.7cqw;line-height:1.6;color:var(--muted);margin-top:2.4cqw;font-weight:500}
+p.s b{color:var(--ink)}
+.foot{position:absolute;left:7cqw;right:7cqw;bottom:5.5cqw;display:flex;justify-content:space-between;font-size:2.7cqw;font-weight:700;color:var(--muted)}
+.stage{margin-top:auto}
+/* 미니 화면 조각 */
+.panel{background:var(--paper);border:.3cqw solid var(--line);border-radius:3cqw;padding:3.4cqw 3.6cqw;box-shadow:0 1.4cqw 3cqw -2cqw rgba(34,48,42,.3)}
+.ph{font-size:3.1cqw;font-weight:800;margin-bottom:1.6cqw;display:flex;align-items:center;gap:1.6cqw}
+.li{display:flex;align-items:center;gap:2.2cqw;padding:1.7cqw 0;border-top:.25cqw dashed var(--line);font-size:3.3cqw;font-weight:600}
+.li:first-of-type{border-top:0}
+.ck{width:3.6cqw;height:3.6cqw;border:.5cqw solid var(--line);border-radius:1cqw;flex:none}
+.ck.on{background:var(--dad);border-color:var(--dad);position:relative}
+.ck.on::after{content:"";position:absolute;left:.7cqw;top:.6cqw;width:1.6cqw;height:.9cqw;border:.5cqw solid #fff;border-top:0;border-right:0;transform:rotate(-45deg)}
+.done{text-decoration:line-through;color:var(--muted)}
+.pill{margin-left:auto;font-size:2.5cqw;font-weight:800;padding:.4cqw 1.8cqw;border-radius:9cqw;background:var(--soft);color:var(--muted);white-space:nowrap}
+.pill.w{background:var(--orange-soft);color:var(--orange)}
+.dot{width:2.2cqw;height:2.2cqw;border-radius:50%;display:inline-block;flex:none}
+.tm{font-weight:800;font-variant-numeric:tabular-nums;min-width:9cqw;font-size:3cqw}
+.row{display:flex;gap:2.4cqw;align-items:stretch}
+.arrow{align-self:center;font-size:5cqw;color:var(--green);font-weight:900}
+.paste{background:var(--paper);border:.3cqw dashed var(--muted);border-radius:2.4cqw;padding:2.6cqw 3cqw;font-size:2.9cqw;line-height:1.75;color:var(--ink);flex:1}
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:2.2cqw;margin-top:4cqw}
+.step{display:flex;gap:2.8cqw;align-items:flex-start;font-size:3.6cqw;line-height:1.5;font-weight:600}
+.step::before{counter-increment:s;content:counter(s);flex:none;width:6cqw;height:6cqw;border-radius:50%;background:var(--ink);color:var(--paper);
+  display:grid;place-items:center;font-size:3cqw;font-weight:800;margin-top:-.2cqw}
+.step small{display:block;font-size:3cqw;color:var(--muted);font-weight:500}
+.kbd{display:inline-block;background:var(--ink);color:var(--paper);border-radius:1.2cqw;padding:0 1.6cqw;font-size:.9em;font-weight:700}
+/* 표지 */
+.cover{background:var(--green);color:#f4efe4}
+.cover .tag{color:#cfe3d6}.cover .tag i{background:#cfe3d6}
+.cover h2{font-size:10.5cqw;margin-top:auto;color:#fffdf8}
+.cover p.s{color:#cfe3d6;font-size:4cqw}
+.cover .foot{color:#cfe3d6}
+.cover .num{color:#cfe3d6}
+.tabs{display:flex;flex-wrap:nowrap;gap:1.3cqw;margin:4.5cqw 0 7cqw}
+.tabs span{border:.3cqw solid rgba(244,239,228,.45);border-radius:9cqw;padding:.9cqw 2.2cqw;font-size:2.7cqw;font-weight:700;white-space:nowrap}
+.big-house{position:absolute;right:6cqw;top:16cqw;width:30cqw;height:30cqw}
+.end{background:var(--ink);color:var(--cream)}
+.end .tag{color:#9fc9b1}.end .tag i{background:#9fc9b1}
+.end h2{color:#fffdf8}.end h2 em{color:#9fc9b1}
+.end p.s{color:#b9c2bc}.end p.s b{color:#fffdf8}
+.end .foot,.end .num{color:#9aa49d}
+.end .panel{background:#2b3a33;border-color:#3b4b43;color:var(--cream)}
+.end .li{border-color:#3b4b43}
+/* 1장 저장 모드: ?card=N → 1080×1080 한 장만 */
+body.solo{padding:0;background:var(--cream)}
+body.solo .wrap{max-width:none;width:1080px;gap:0}
+body.solo .lead{display:none}
+body.solo .card{border-radius:0;box-shadow:none;display:none}
+body.solo .card.show{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="lead">우리집 수첩 사용법 · 정사각 9장 (스레드·인스타 공유용)<br>한 장씩 저장: 주소 뒤에 <b>?card=1</b> ~ <b>?card=9</b></div>
+
+<!-- 1 표지 -->
+<section class="card cover"><div class="in">
+  <span class="num">01 / 09</span>
+  <div class="tag"><i></i>우리집 수첩 사용법</div>
+  <svg class="big-house" viewBox="0 0 100 100" fill="none" stroke="#cfe3d6" stroke-width="4" stroke-linejoin="round" aria-hidden="true">
+    <path d="M14 46 50 16l36 30"/><path d="M24 40v44h52V40"/><rect x="42" y="58" width="16" height="26" rx="2"/><path d="M62 52h8M62 60h8"/></svg>
+  <h2>일정·숙제·<br>통신문을<br>한 화면에</h2>
+  <p class="s">자꾸 다시 묻는 것, 놓치기 쉬운 것을 가족 수첩 하나로 모아요.</p>
+  <div class="tabs"><span>홈</span><span>일정</span><span>할 일</span><span>학교생활</span><span>위키</span><span>자동 입력</span></div>
+  <div class="foot" style="margin-top:0"><span>파일 하나 · 설치 없음</span><span>넘겨 보세요 →</span></div>
+</div></section>
+
+<!-- 2 왜 -->
+<section class="card"><div class="in">
+  <span class="num">02 / 09</span>
+  <div class="tag"><i></i>왜 만들었나</div>
+  <h2>가족 달력은<br><span class="o">입력을 안 하면</span><br>방치돼요</h2>
+  <p class="s">그래서 <b>알림장을 그대로 붙여넣으면</b> 숙제·준비물·마감일을 알아서 찾아 주게 만들었어요.</p>
+  <div class="stage panel">
+    <div class="li"><span class="ck"></span>학원 시간이 언제였더라?<span class="pill">또 질문</span></div>
+    <div class="li"><span class="ck"></span>동의서 회신 언제까지야?<span class="pill w">놓침</span></div>
+    <div class="li"><span class="ck on"></span><span class="done">이제 수첩에 다 있음</span><span class="pill">해결</span></div>
+  </div>
+</div></section>
+
+<!-- 3 시작 -->
+<section class="card"><div class="in">
+  <span class="num">03 / 09</span>
+  <div class="tag"><i></i>처음 한 번</div>
+  <h2>우리 가족으로<br><em>바꿔 주세요</em></h2>
+  <div class="steps">
+    <div class="step"><span><b>index.html</b>을 크롬으로 열기<small>빛돌 포털 › 생산성·AI › 생활·정서에도 있어요</small></span></div>
+    <div class="step"><span><span class="kbd">⚙ 설정</span> → 가족 구성원 <b>편집</b><small>이름·역할(아이/부모)·학년·색을 바꿔요</small></span></div>
+    <div class="step"><span>예시 일정·숙제는 <b>편집 → 삭제</b><small>처음 들어 있는 엄마·아빠·첫째·둘째는 예시예요</small></span></div>
+  </div>
+  <div class="foot"><span>아이 색 = 달력 점·시간표 색</span><span></span></div>
+</div></section>
+
+<!-- 4 홈 -->
+<section class="card"><div class="in">
+  <span class="num">04 / 09</span>
+  <div class="tag"><i></i>홈</div>
+  <h2>아침에 <em>홈만</em><br>보면 돼요</h2>
+  <p class="s">달력의 <b>색 점</b>은 누구 일정인지, 아이 카드에는 <b>오늘·내일 할 일</b>과 <b>확인할 통신문</b>이 모여요.</p>
+  <div class="stage row">
+    <div class="panel" style="flex:1;border-top:1.2cqw solid var(--blue)">
+      <div class="ph"><span class="dot" style="background:var(--blue)"></span>첫째</div>
+      <div class="li"><span class="tm">16:00</span>수학학원</div>
+      <div class="li"><span class="ck"></span>수학 익힘책<span class="pill w">오늘</span></div>
+    </div>
+    <div class="panel" style="flex:1;border-top:1.2cqw solid var(--kid2)">
+      <div class="ph"><span class="dot" style="background:var(--kid2)"></span>둘째</div>
+      <div class="li"><span class="tm">14:30</span>태권도</div>
+      <div class="li"><span class="ck"></span>동의서 회신<span class="pill w">내일</span></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 5 일정 -->
+<section class="card"><div class="in">
+  <span class="num">05 / 09</span>
+  <div class="tag"><i></i>일정</div>
+  <h2>학원은 <em>한 번만</em><br>적으면 매주 나와요</h2>
+  <p class="s"><span class="kbd">+ 학원(매주)</span>에서 요일을 고르면 주간 보기에 <b>점선 칸</b>으로 반복돼요. 공개수업 같은 날은 <span class="kbd">+ 일정</span>.</p>
+  <div class="stage panel">
+    <div class="ph">이번 주</div>
+    <div class="li"><span class="tm">월</span><span class="dot" style="background:var(--blue)"></span>수학학원 16:00<span class="pill">매주</span></div>
+    <div class="li"><span class="tm">화</span><span class="dot" style="background:var(--kid2)"></span>태권도 14:30<span class="pill">매주</span></div>
+    <div class="li"><span class="tm">수</span><span class="dot" style="background:var(--blue)"></span>공개수업 10:30<span class="pill w">한 번</span></div>
+  </div>
+</div></section>
+
+<!-- 6 자동 입력 -->
+<section class="card"><div class="in">
+  <span class="num">06 / 09</span>
+  <div class="tag"><i></i>자동 입력 ★</div>
+  <h2>알림장은<br><em>붙여넣기</em> 한 번</h2>
+  <p class="s"><span class="kbd">⇣ 자동 입력</span>에 붙여넣고 <b>후보 만들기</b> → 맞는 것만 체크해 <b>넣기</b>.</p>
+  <div class="stage row">
+    <div class="paste">준비물: 색종이, 풀<br>(금요일까지)<br>수학 익힘 52~53쪽<br>- 내일<br>동의서 회신 11/18</div>
+    <span class="arrow">→</span>
+    <div class="panel" style="flex:1.25;padding:2.6cqw 3cqw">
+      <div class="li" style="font-size:2.9cqw"><span class="ck on"></span>색종이·풀<span class="pill">준비물</span></div>
+      <div class="li" style="font-size:2.9cqw"><span class="ck on"></span>익힘 52~53쪽<span class="pill">숙제</span></div>
+      <div class="li" style="font-size:2.9cqw"><span class="ck on"></span>동의서 회신<span class="pill w">통신문</span></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 7 할 일·학교생활 -->
+<section class="card"><div class="in">
+  <span class="num">07 / 09</span>
+  <div class="tag"><i></i>할 일 · 학교생활</div>
+  <h2>체크하면 끝,<br><span class="o">주황</span>은 급한 것</h2>
+  <p class="s"><b>루틴</b>(책 읽기·줄넘기)은 다음 날 다시 열려요. 다 끝난 숙제는 <b>완료 항목 정리</b>로 치워요.</p>
+  <div class="stage panel">
+    <div class="li"><span class="ck on"></span><span class="done">받아쓰기 3급 연습</span><span class="pill">숙제</span></div>
+    <div class="li"><span class="ck"></span>하루 15분 책 읽기<span class="pill">매일</span></div>
+    <div class="li"><span class="ck"></span>현장체험학습 동의서<span class="pill w">회신 내일까지</span></div>
+  </div>
+</div></section>
+
+<!-- 8 위키 -->
+<section class="card"><div class="in">
+  <span class="num">08 / 09</span>
+  <div class="tag"><i></i>우리집 위키</div>
+  <h2>두 번 물은 건<br><em>위키에 적기</em></h2>
+  <p class="s">학원 원비 날짜, 차량 시간, 준비물 목록… <b>[[페이지 이름]]</b>으로 쓰면 다른 페이지로 이어져요. 없는 이름이면 눌러서 바로 만들어요.</p>
+  <div class="stage panel">
+    <div class="ph">학원 정보</div>
+    <div class="li" style="border:0">• 수학학원 월·수·금 16:00</div>
+    <div class="li" style="border:0;padding-top:0">• 원비 납부일: 매월 5일</div>
+    <div class="li" style="border:0;padding-top:0">• 자세히 → <b style="color:var(--green);border-bottom:.4cqw solid var(--green)">첫째</b></div>
+  </div>
+</div></section>
+
+<!-- 9 저장·에이전트 -->
+<section class="card end"><div class="in">
+  <span class="num">09 / 09</span>
+  <div class="tag"><i></i>저장 · 백업 · 에이전트</div>
+  <h2>내용은 <em>이 PC</em><br>브라우저에만</h2>
+  <p class="s">다른 기기로 옮기거나 백업할 땐 <b>설정 → JSON 내보내기</b>. Claude에게 알림장 사진을 주고 JSON을 만들게 한 뒤 <b>가져오기(합치기)</b>하면 한 번에 들어가요.</p>
+  <div class="stage panel">
+    <div class="li"><span class="tm" style="color:#9fc9b1;min-width:4cqw">1</span>알림장 사진 → Claude</div>
+    <div class="li"><span class="tm" style="color:#9fc9b1;min-width:4cqw">2</span>JSON 파일 받기 (README 형식)</div>
+    <div class="li"><span class="tm" style="color:#9fc9b1;min-width:4cqw">3</span>설정 › 가져오기(합치기)</div>
+  </div>
+</div></section>
+
+</div>
+<script>
+const n = +new URLSearchParams(location.search).get('card');
+if (n){ document.body.classList.add('solo'); const c = document.querySelectorAll('.card')[n-1]; if (c) c.classList.add('show'); }
+</script>
+</body>
+</html>
